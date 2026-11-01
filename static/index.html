@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Curio · Museum Retrieval</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Sora:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <div class="atmosphere" aria-hidden="true"></div>
+
+  <header class="shell-top">
+    <a class="brand" href="/" aria-label="Curio home">
+      <span class="brand-mark">Curio</span>
+    </a>
+    <nav class="tabs" role="tablist" aria-label="Primary">
+      <button class="tab active" data-tab="search" role="tab" aria-selected="true">Search</button>
+      <button class="tab" data-tab="eval" role="tab" aria-selected="false">Experiments</button>
+      <button class="tab" data-tab="about" role="tab" aria-selected="false">About</button>
+    </nav>
+  </header>
+
+  <main class="shell">
+    <section id="panel-search" class="panel active" role="tabpanel">
+      <div class="stage">
+        <p class="eyebrow">Chinese museum collections</p>
+        <h1 class="stage-title">Curio</h1>
+        <p class="stage-lead">Attribute-compositional text-to-image ranking — period, material, and form in one query.</p>
+
+        <form id="search-form" class="console" autocomplete="off">
+          <label class="sr-only" for="query">Query</label>
+          <input id="query" type="text" placeholder="Qing porcelain vase / 清代瓷瓶" />
+          <div class="console-row">
+            <label class="field">
+              <span>Method</span>
+              <select id="method">
+                <option value="compositional">Compositional CLIP</option>
+                <option value="hybrid_rrf">Hybrid RRF</option>
+                <option value="clip_rerank">CLIP + rerank</option>
+                <option value="clip">CLIP only</option>
+                <option value="bm25">BM25 metadata</option>
+              </select>
+            </label>
+            <label class="field">
+              <span>Material</span>
+              <select id="filter-material"><option value="">Any</option></select>
+            </label>
+            <label class="field">
+              <span>Object</span>
+              <select id="filter-type"><option value="">Any</option></select>
+            </label>
+            <label class="field">
+              <span>Period</span>
+              <select id="filter-period"><option value="">Any</option></select>
+            </label>
+            <button type="submit" class="cta">Search</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="results-head">
+        <p id="status" class="status">Describe an object to rank the gallery.</p>
+      </div>
+      <div id="results" class="wall"></div>
+    </section>
+
+    <section id="panel-eval" class="panel" role="tabpanel">
+      <header class="section-head">
+        <h2>Experiments</h2>
+        <p>Held-out metrics for the fixed gallery and test queries.</p>
+      </header>
+      <div id="metrics-table" class="surface metrics-surface">Loading…</div>
+      <div class="query-lab">
+        <label class="field grow">
+          <span>Test query</span>
+          <select id="query-pick"></select>
+        </label>
+        <div id="query-detail" class="surface"></div>
+      </div>
+    </section>
+
+    <section id="panel-about" class="panel" role="tabpanel">
+      <header class="section-head">
+        <h2>About</h2>
+        <p>How Curio defines relevance and ranks results.</p>
+      </header>
+      <div class="about-grid">
+        <article class="about-block">
+          <h3>Task</h3>
+          <p>Rank Chinese museum images from a natural-language query (English or Chinese lexicon) using attribute-compositional ranking.</p>
+        </article>
+        <article class="about-block">
+          <h3>Relevance</h3>
+          <p>Strict relevance needs all stated <em>period / material / object type</em> constraints. Graded nDCG credits partial matches. Each result shows match or conflict evidence.</p>
+        </article>
+        <article class="about-block">
+          <h3>Method</h3>
+          <p>Multi-prompt CLIP (full query plus period, material, and type prompts) fused with soft attribute gates. BM25 remains an explicit metadata baseline.</p>
+        </article>
+        <article class="about-block">
+          <h3>Data</h3>
+          <p>Met and Cleveland CC0 Chinese collections — a fixed gallery sized for attribute-balanced experiments.</p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <div id="lightbox" class="lightbox hidden" role="dialog" aria-modal="true" aria-label="Object detail">
+    <div class="lightbox-inner">
+      <button id="lightbox-close" type="button" class="ghost">Close</button>
+      <div class="lightbox-frame">
+        <img id="lightbox-img" alt="" />
+      </div>
+      <pre id="lightbox-meta"></pre>
+    </div>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

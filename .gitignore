@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.env
+.DS_Store
+
+# Local CLIP weights (~580MB) — Hugging Face download on first run
+models/**/*.safetensors
+models/**/*.bin
+models/**/*.pt
+models/**/*.pth
+
+# Huge raw dumps (not needed to run the app)
+data/raw/MetObjects.csv
+data/raw/**/*.csv
+
+# Tooling / caches
+.tools/
+*.log
+.cache/
+tmp/
+.ipynb_checkpoints/

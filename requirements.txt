@@ -1,0 +1,10 @@
+flask>=3.0
+numpy>=1.24
+pandas>=2.0
+pillow>=10.0
+requests>=2.31
+rank-bm25>=0.2.2
+tqdm>=4.66
+torch>=2.0
+transformers>=4.40
+pyyaml>=6.0
