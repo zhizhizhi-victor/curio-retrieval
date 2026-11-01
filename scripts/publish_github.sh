@@ -1,19 +1,43 @@
 #!/usr/bin/env bash
-# Publish Curio to GitHub for teammates. Run in Terminal:
+# Publish Curio to GitHub for teammates.
+# Prefer running from Terminal.app (outside Cursor sandbox), with GitHub reachable
+# (VPN if needed in mainland networks):
+#
+#   cd "/Users/victor/Documents/computer vision and image processing/curio-retrieval"
 #   bash scripts/publish_github.sh
+#
+# Or push the already-prepared copy:
+#   cd "/Users/victor/Documents/computer vision and image processing/curio-retrieval-github"
+#   bash ../curio-retrieval/scripts/publish_github.sh
 set -euo pipefail
-cd "$(dirname "$0")/.."
-ROOT="$PWD"
+
+if [[ -d .git ]] && git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+  ROOT="$(git rev-parse --show-toplevel)"
+  cd "$ROOT"
+else
+  cd "$(dirname "$0")/.."
+  ROOT="$PWD"
+fi
 
 echo "==> Working directory: $ROOT"
 
 if ! command -v gh >/dev/null 2>&1; then
-  if [[ -x "$ROOT/.tools/gh_2.67.0_macOS_arm64/bin/gh" ]]; then
-    export PATH="$ROOT/.tools/gh_2.67.0_macOS_arm64/bin:$PATH"
+  GH_LOCAL="$ROOT/.tools/gh_2.67.0_macOS_arm64/bin"
+  if [[ -x "$GH_LOCAL/gh" ]]; then
+    export PATH="$GH_LOCAL:$PATH"
+  elif [[ -x "/Users/victor/Documents/computer vision and image processing/curio-retrieval/.tools/gh_2.67.0_macOS_arm64/bin/gh" ]]; then
+    export PATH="/Users/victor/Documents/computer vision and image processing/curio-retrieval/.tools/gh_2.67.0_macOS_arm64/bin:$PATH"
   else
     echo "Installing GitHub CLI via Homebrew..."
     brew install gh
   fi
+fi
+
+echo "==> Checking reachability of github.com ..."
+if ! curl -I -m 12 https://github.com >/dev/null 2>&1; then
+  echo "ERROR: cannot reach https://github.com from this network."
+  echo "Turn on VPN / proxy, then re-run this script."
+  exit 1
 fi
 
 echo "==> GitHub auth"
@@ -26,9 +50,7 @@ if [[ ! -d .git ]]; then
   git init -b main
 fi
 
-# Ensure ignore rules are present
 git add -A
-# Drop accidental tool binaries if staged
 git rm -r --cached .tools 2>/dev/null || true
 
 if git rev-parse HEAD >/dev/null 2>&1; then
