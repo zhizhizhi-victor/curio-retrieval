@@ -40,7 +40,9 @@ python scripts/evaluate.py
 5. **Hybrid RRF** — BM25 ∪ compositional  
 
 Queries: English + Chinese lexicon (e.g. `清代瓷瓶`).  
-Docs: `docs/PROJECT_REPORT.md`, `docs/汇报稿.md`.
+
+**完整说明书：** [`docs/系统说明书.md`](docs/系统说明书.md)（模型、数据、效果、安装与界面）  
+其他：`docs/PROJECT_REPORT.md`、`docs/汇报稿.md`、`docs/METHODOLOGY.md`。
 
 ## Repo layout
 
